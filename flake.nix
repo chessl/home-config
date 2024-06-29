@@ -79,6 +79,7 @@
             fira-code
             jetbrains-mono
             monolisa
+            monolisa-nerd
             eb-garamond
           ];
         };
@@ -115,7 +116,8 @@
     in
     {
       overlay = _: prev: {
-        monolisa = prev.callPackage ./nix/pkgs/monolisa { };
+        monolisa = prev.callPackage ./nix/pkgs/monolisa.nix { };
+        monolisa-nerd = prev.callPackage ./nix/pkgs/monolisa-nerd.nix { };
       };
 
       darwinConfigurations = {

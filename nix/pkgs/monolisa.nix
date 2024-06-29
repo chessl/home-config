@@ -1,7 +1,7 @@
-{ stdenv, requireFile, unzip, nerd-font-patcher, lib }:
+{ stdenv, requireFile, unzip, lib }:
 
 stdenv.mkDerivation rec {
-  name = "monolisa-nerd";
+  name = "monolisa";
   version = "2.015";
 
   src = requireFile rec {
@@ -12,22 +12,22 @@ stdenv.mkDerivation rec {
       $ nix-store --add-fixed sha256 /path/to/${name}
 
       Did you change the file? maybe you need to update the sha256
-      $ nix-hash --flat --base32 --type sha256 /path/${name}'';
+      $ nix-hash --flat --base32 --type sha256 /path/to/${name}'';
   };
 
-  buildInputs = [ unzip nerd-font-patcher ];
-  phases = [ "unpackPhase" "buildPhase" "installPhase" ];
+  buildInputs = [ unzip ];
+  phases = [ "unpackPhase" "installPhase" ];
   pathsToLink = [ "/share/fonts/truetype/" ];
   sourceRoot = ".";
 
-  buildPhase = ''
-    find -name "MonoLisa*.ttf" -exec nerd-font-patcher {} --complete --no-progressbars ./ \;
-  '';
-
   installPhase = ''
+    runHook preInstall
+
     install_path=$out/share/fonts/truetype
     mkdir -p $install_path
     find -name "MonoLisa*.ttf" -exec cp {} $install_path \;
+
+    runHook postInstall
   '';
 
   meta = with lib; {
