@@ -31,7 +31,7 @@ in
 
         user = {
           packages = with pkgs; [
-            nodejs-18_x
+            nodejs_22
             nodePackages.pnpm
           ];
         };
