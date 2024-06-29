@@ -81,6 +81,7 @@
             monolisa
             monolisa-nerd
             eb-garamond
+            (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
           ];
         };
 
