@@ -37,7 +37,7 @@ in
 
         user = {
           packages = with pkgs; [
-            python310Full
+            python3Full
           ];
         };
       };
