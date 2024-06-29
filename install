@@ -1,0 +1,266 @@
+#!/usr/bin/env bash
+
+# https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eueo pipefail
+
+SUDO_USER=$(whoami)
+
+# Intell by default becaue my personal machine
+ARCH="i386"
+
+if [[ $(arch) == 'arm64' ]]; then
+  ARCH="$(arch)"
+fi
+
+HOMEBREW_BIN="/usr/local/bin"
+
+if [[ "$ARCH" == 'arm64' ]]; then
+  HOMEBREW_BIN="/opt/homebrew/bin"
+fi
+
+# =======================================================================
+# = Helpers & setting some variables
+# =======================================================================
+
+DOTFILES_DIR="$HOME/Developer/.home-config"
+
+tput sgr0
+RED=$(tput setaf 1)
+ORANGE=$(tput setaf 3)
+GREEN=$(tput setaf 2)
+PURPLE=$(tput setaf 5)
+CYAN=$(tput setaf 4)
+BLUE=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+log() {
+  local LABEL="[$1]"
+  local COLOR="$2"
+  shift
+  shift
+  local MSG=("$@")
+  printf "${COLOR}${LABEL}%*s${RESET}" $(($(tput cols) - ${#LABEL})) | tr ' ' '='
+  for M in "${MSG[@]}"; do
+    let COL=$(tput cols)-2-${#M}
+    printf "%s%${COL}s${RESET}" "$COLOR* $M"
+  done
+  printf "${COLOR}%*s${RESET}\n\n\n" $(tput cols) | tr ' ' '='
+}
+
+log_error() {
+  log "FAIL" "$RED" "$@"
+  exit 1
+}
+
+log_info() {
+  log "INFO" "$ORANGE" "$@"
+}
+
+log_success() {
+  log "OK" "$GREEN" "$@"
+}
+
+print_main_banner() {
+  cd "$HOME"
+  command cat <<EOF
+$GREEN
+                        ┬ ┬┌─┐┌┬┐┌─┐  ┌─┐┌─┐┌┐┌┌─┐┬┌─┐
+                        ├─┤│ ││││├┤───│  │ ││││├┤ ││ ┬ $()
+                        ┴ ┴└─┘┴ ┴└─┘  └─┘└─┘┘└┘└  ┴└─┘
+
+                        bootstrapping an $ARCH machine
+
+$RESET
+EOF
+
+  if [ -d "$DOTFILES_DIR/.git" ]; then
+    command cat <<EOF
+$BLUE
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         $(git --git-dir "$DOTFILES_DIR/.git" --work-tree "$DOTFILES_DIR" log -n 1 --pretty=format:'%C(yellow)commit:  %h')
+         $(git --git-dir "$DOTFILES_DIR/.git" --work-tree "$DOTFILES_DIR" log -n 1 --pretty=format:'%C(red)date:    %ad' --date=short)
+         $(git --git-dir "$DOTFILES_DIR/.git" --work-tree "$DOTFILES_DIR" log -n 1 --pretty=format:'%C(cyan)author:  %an')
+         $(git --git-dir "$DOTFILES_DIR/.git" --work-tree "$DOTFILES_DIR" log -n 1 --pretty=format:'%C(green)message: %s')
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$RESET
+EOF
+  fi
+}
+
+print_prompt() {
+  echo "What do you want to do?"
+  PS3="Enter your choice (must be a number): "
+  options=("All" "Install package manager" "Clone home-config" "Apply" "Quit")
+  select opt in "${options[@]}"; do
+    case $opt in
+    "All")
+      all
+      break
+      ;;
+    "Install package manager")
+      package_manager
+      break
+      ;;
+    "Clone home-config")
+      clone_home_config
+      break
+      ;;
+    "Apply")
+      apply
+      break
+      ;;
+    "Quit")
+      break
+      ;;
+    *)
+      echo "Invalid option"
+      break
+      ;;
+    esac
+  done
+}
+
+# =======================================================================
+# = Main functions
+# =======================================================================
+
+install_homebrew() {
+  if [ -f "$HOMEBREW_BIN/brew" ]; then
+    log_info "Homebrew already installed"
+  else
+    log_success "Installing Homebrew"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+}
+
+install_xcode() {
+  if command -v xcode-select >/dev/null; then
+    log_info "Xcode already installed"
+  else
+    log_success "Installing Xcode"
+    xcode-select --install
+    if [[ "$ARCH" == 'arm64' ]]; then
+      log_success "Installing Rosetta"
+      sudo -u "$SUDO_USER" softwareupdate --install-rosetta --agree-to-license
+    fi
+  fi
+}
+
+install_nix() {
+  if command -v nix >/dev/null; then
+    log_info "Nix already installed"
+  else
+    log_success "Installing Nix"
+    # true | sh <(curl -L https://nixos.org/nix/install)
+    # Using the Determinate Nix installer instead of the official one
+    # See https://zero-to-nix.com/concepts/nix-installer
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+  fi
+
+}
+
+package_manager() {
+  if [ "$(uname)" == "Darwin" ]; then
+    install_xcode
+    install_homebrew
+    install_nix
+  fi
+}
+
+decrypt_repo() {
+  cd "$DOTFILES_DIR"
+
+  echo "decrypting dotfiles..."
+  echo -n "transcrypt cipher: "
+  read -r cipher
+  echo -n "transcrypt password: "
+  read -sr password
+  echo
+
+  transcrypt -c "$cipher" -p "$password"
+}
+
+clone_home_config() {
+  if [[ ! -d $DOTFILES_DIR ]]; then
+    log_success "Cloning dotfiles..."
+    git clone --recursive git@github.com:chessl/home-config.git "$DOTFILES_DIR"
+
+    # decrypt_repo
+  else
+    cd "$DOTFILES_DIR"
+    git stash -u || true
+    git checkout main
+    git reset --hard origin/main
+    git submodule update --init --recursive
+    git checkout -
+    git stash pop || true
+  fi
+}
+
+apply() {
+  if [ "$(uname)" == "Darwin" ]; then
+    if command -v nix >/dev/null; then
+      log_info "Building flakes..."
+
+      cd "$DOTFILES_DIR"
+
+      # Add font assets
+      # nix-store --add-fixed sha256 "$DOTFILES_DIR/nix/pkgs/monolisa/monolisa-nerd-complete-2.011.zip"
+
+      nix --experimental-features 'nix-command flakes' build "./#$(hostname -s)"
+
+      # Needed for nix-darwin to work, copied verbatium from the install script, since we build with flakes we have to do this manually
+      # https://github.com/abathur/nix-darwin/blob/44da835ac40dab5fd231298b59d83487382d2fab/pkgs/darwin-installer/configuration.nix#L45-L51
+      if ! grep -q '^run\b' /etc/synthetic.conf 2>/dev/null; then
+        echo "setting up /etc/synthetic.conf..."
+        echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf >/dev/null
+        sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null ||
+          echo "warning: failed to execute apfs.util"
+      fi
+
+      # Needed otherwise nix-darwin will complain
+      old_files=("/etc/bashrc" "/etc/shells" "/etc/zshenv" "/etc/zshrc" "/etc/zprofile" "/etc/nix/nix.conf")
+      for old_filename in "${old_files[@]}"; do
+        if [ -f "$old_filename" ]; then
+          log_info "Moving $old_filename to $old_filename.old"
+          sudo mv $old_filename $old_filename.old
+        fi
+      done
+
+      "$DOTFILES_DIR"/result/sw/bin/darwin-rebuild switch --flake "./#$(hostname -s)"
+    else
+      log_error "Nix is not installed, exiting."
+    fi
+  else
+    sudo -u "$SUDO_USER" nixos-rebuild switch --flake "./#$(hostname -s)"
+  fi
+}
+
+all() {
+  package_manager
+  clone_home_config
+  apply
+
+  FAILED_COMMAND=$(fc -ln -1)
+
+  if [ $? -eq 0 ]; then
+    log_success "Done."
+    log_info "Don't forget to generate SSH keys & import gpg keys"
+    # command vim -u NONE $XDG_DATA_HOME/$(hostname)/{gitconfig,zshrc}
+  else
+    log_error "Something went wrong, [ Failed on: $FAILED_COMMAND ]"
+  fi
+}
+
+run() {
+  print_main_banner
+  print_prompt
+}
+
+# =======================================================================
+# = Run!
+# =======================================================================
+
+run
