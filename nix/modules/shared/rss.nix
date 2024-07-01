@@ -23,8 +23,8 @@ in
           autoReload = true;
           urls = [
             {
-              tags = [ ];
-              url = "";
+              tags = [ "system programming" "learning" "nix" "engineering" ];
+              url = "https://jvns.ca/atom.xml";
 
             }
           ];
