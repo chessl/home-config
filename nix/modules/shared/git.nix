@@ -70,7 +70,7 @@ in
         type = with types; uniq str;
       };
       includes = mkOption {
-        default = [];
+        default = [ ];
         type = with types; listOf includeModule;
       };
     };
@@ -260,7 +260,6 @@ in
 
             "node_modules"
             ".direnv/"
-            ".envrc"
             "*.pyc"
             "*.map"
             ".ignore"
