@@ -152,6 +152,6 @@
       # Move them to `outputs.packages.<system>.name`
 
       lambda-box = self.darwinConfigurations.lambda-box.system;
-      beta-box = self.darwinConfigurations.beta.system;
+      beta-box = self.darwinConfigurations.beta-box.system;
     };
 }
