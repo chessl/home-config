@@ -21,7 +21,6 @@ local servers = {
   "rnix",
   "yamlls",
   "dartls",
-  "thriftls",
   "move_analyzer",
   -- "sui_move_analyzer",
 }

@@ -47,7 +47,6 @@ return {
         -- shell
         "shfmt",
         "shellcheck",
-        "thriftls",
 
         -- move
         "move-analyzer",
