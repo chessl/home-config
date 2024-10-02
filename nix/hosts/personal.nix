@@ -33,9 +33,6 @@
   homebrew.brews = [ ];
   homebrew.casks = [
     "wechat"
-    "telegram"
-    "discord"
-    "kindle"
   ];
 
   networking = {
