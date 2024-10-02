@@ -10,7 +10,7 @@
   my = {
     modules = {
       gpg.enable = true;
-      wm.enable = true;
+      wm.enable = false;
       macos.enable = true;
       git = {
         enable = true;
