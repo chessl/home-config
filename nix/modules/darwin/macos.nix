@@ -90,7 +90,7 @@ in
             InitialKeyRepeat = 10;
             KeyRepeat = 1;
 
-            # Disable automatic capitalization 
+            # Disable automatic capitalization
             NSAutomaticCapitalizationEnabled = false;
 
             # Disable smart dash substitution
@@ -132,6 +132,11 @@ in
             # com.apple.springing.enabled = true;
           };
 
+          spaces = {
+            # one space spans across (for the sake of aerospace)
+            spans-displays = true;
+          };
+
           dock = {
             # System Preferences > Dock > Position on screen: Left
             orientation = "left";
@@ -148,7 +153,10 @@ in
             # Disable dashboard
             dashboard-in-overlay = true;
             expose-animation-duration = 0.1;
-            expose-group-by-app = false;
+
+            # Whether to group windows by application in Mission Control’s Exposé (for the sake of aeraspace)
+            expose-group-by-app = true;
+
             launchanim = false;
             mineffect = "genie";
 
