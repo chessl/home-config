@@ -17,16 +17,13 @@ in
   config = with lib;
     mkIf cfg.enable (mkMerge [
       (if (builtins.hasAttr "homebrew" options) then {
-        # TODO: (automate) Requires homebrew to be installed
         homebrew.taps = [
-          "nikitabobko/tap"
           # "homebrew/cask"
           # "homebrew/cask-versions"
           # "riscv/riscv"
         ];
         homebrew.casks = [
           # "surge"
-          "nikitabobko/tap/aerospace"
           "iina"
           "sublime-text"
           "raycast"

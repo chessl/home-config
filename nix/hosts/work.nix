@@ -13,7 +13,7 @@
     email = "chess@bytedance.com";
     modules = {
       gpg.enable = true;
-      wm.enable = false;
+      wm.enable = true;
       macos.enable = true;
       git = {
         enable = true;
