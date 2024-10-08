@@ -22,6 +22,7 @@ local servers = {
   "yamlls",
   "dartls",
   "move_analyzer",
+  "hls", -- haskell-language-server
   -- "sui_move_analyzer",
 }
 

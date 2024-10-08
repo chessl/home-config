@@ -50,6 +50,11 @@ return {
 
         -- move
         "move-analyzer",
+
+        -- haskell
+        "haskell-language-server",
+        "hlint",
+        "ormolu",
       },
     },
   },

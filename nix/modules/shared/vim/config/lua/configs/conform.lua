@@ -18,6 +18,8 @@ local options = {
     go = { "goimports", "gofmt" },
     nix = { "nixfmt" },
     dart = { "dart_formah" },
+    haskell = { "ormolu" },
+    lhaskell = { "ormolu" },
 
     -- Configs
     json = { "yq" },
