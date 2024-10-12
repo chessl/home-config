@@ -48,9 +48,6 @@ return {
         "shfmt",
         "shellcheck",
 
-        -- move
-        "move-analyzer",
-
         -- haskell
         "haskell-language-server",
         "hlint",

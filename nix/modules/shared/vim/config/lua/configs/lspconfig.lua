@@ -18,7 +18,7 @@ local servers = {
   "rust_analyzer",
   "tsserver",
   "gopls",
-  "rnix",
+  "nixd",
   "yamlls",
   "dartls",
   "move_analyzer",

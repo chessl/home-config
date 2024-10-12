@@ -117,6 +117,8 @@ in
               atool # Archive command line helper
               pv # Tool for monitoring the progress of data through a pipeline
               gtypist
+              nixd # nix lsp
+              nixfmt # nix formatter
             ];
         };
 
