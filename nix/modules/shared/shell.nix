@@ -30,8 +30,7 @@ let
     tree
   ];
   nixosPackages = with pkgs; [ dwm dmenu xclip ];
-in
-{
+in {
   options = with lib; {
     my.modules.shell = {
       enable = mkEnableOption ''
@@ -74,8 +73,10 @@ in
             topmem = "ps -eo pid,ppid,cmd,%mem,%cpu -m | head";
             ssh = "kitty +kitten ssh";
             s = "kitty +kitten ssh";
-            ssctl = "SEASTAR_ADDR=https://sscontroller.alipay.com ~/.ssctl/bin/ssctl";
-            ",apply" = "nix --experimental-features 'nix-command flakes' flake update && nix --experimental-features 'nix-command flakes' build ~/Developer/home-config/#$(hostname) && ~/Developer/home-config/result/sw/bin/darwin-rebuild switch --flake ~/Developer/home-config/#$(hostname)";
+            ssctl =
+              "SEASTAR_ADDR=https://sscontroller.alipay.com ~/.ssctl/bin/ssctl";
+            ",apply" =
+              "nix --experimental-features 'nix-command flakes' flake update && nix --experimental-features 'nix-command flakes' build ~/Developer/home-config/#$(hostname) && ~/Developer/home-config/result/sw/bin/darwin-rebuild switch --flake ~/Developer/home-config/#$(hostname)";
           };
           variables = {
             XDG_CACHE_HOME = hm.cacheHome;
@@ -96,10 +97,7 @@ in
             # FONTCONFIG_PATH = "${hm.configHome}/fontconfig/conf.d/";
 
           };
-          systemPath = [
-            "/opt/homebrew/bin"
-            "~/.cargo/bin"
-          ];
+          systemPath = [ "/opt/homebrew/bin" "~/.cargo/bin" ];
           systemPackages = with pkgs;
             (if stdenv.isDarwin then darwinPackages else nixosPackages) ++ [
               curl
@@ -118,13 +116,16 @@ in
               pv # Tool for monitoring the progress of data through a pipeline
               gtypist
               nixd # nix lsp
-              nixfmt # nix formatter
+              nixfmt-classic # nix formatter
             ];
         };
 
         my = {
           user = {
-            shell = if pkgs.stdenv.isDarwin then [ pkgs.bashInteractive ] else pkgs.bashInteractive;
+            shell = if pkgs.stdenv.isDarwin then
+              [ pkgs.bashInteractive ]
+            else
+              pkgs.bashInteractive;
             packages = with pkgs; [
               hyperfine # Benchmarking tool
               grc # Generic colouriser
@@ -145,25 +146,19 @@ in
 
         system.activationScripts.postUserActivation.text = ''
           # Set the default shell as bash for the user. MacOs doesn't do this like nixOS does
-          sudo chsh -s ${lib.getBin pkgs.bashInteractive}/bin/bash ${config.my.username}
+          sudo chsh -s ${
+            lib.getBin pkgs.bashInteractive
+          }/bin/bash ${config.my.username}
         '';
 
         programs = {
-          bash = {
-            enable = true;
-          };
+          bash = { enable = true; };
 
-          zsh = {
-            enable = true;
-          };
+          zsh = { enable = true; };
 
-          fish = {
-            enable = true;
-          };
+          fish = { enable = true; };
 
-          nix-index = {
-            enable = true;
-          };
+          nix-index = { enable = true; };
         };
 
         home-manager.users."${config.my.username}" = {
@@ -329,16 +324,10 @@ in
                 save = 1000000;
                 share = true;
                 size = 1000000;
-                ignorePatterns = [
-                  "ls *"
-                  "exit"
-                  "bg"
-                  "fg"
-                  "history"
-                  "clear"
-                ];
+                ignorePatterns = [ "ls *" "exit" "bg" "fg" "history" "clear" ];
               };
-              completionInit = "autoload -U promptinit; promptinit; prompt pure";
+              completionInit =
+                "autoload -U promptinit; promptinit; prompt pure";
             };
 
             fish = {
@@ -370,13 +359,9 @@ in
               enableFishIntegration = true;
             };
 
-            jq = {
-              enable = true;
-            };
+            jq = { enable = true; };
 
-            pandoc = {
-              enable = true;
-            };
+            pandoc = { enable = true; };
 
             readline = {
               enable = true;
@@ -449,27 +434,19 @@ in
 
             };
 
-            bottom = {
-              enable = true;
-            };
+            bottom = { enable = true; };
 
-            ripgrep = {
-              enable = true;
-            };
+            ripgrep = { enable = true; };
 
             direnv = {
               enable = true;
               enableBashIntegration = true;
               enableZshIntegration = true;
               nix-direnv.enable = true;
-              config = {
-                theme = "ansi-dark";
-              };
+              config = { theme = "ansi-dark"; };
             };
 
-            htop = {
-              enable = true;
-            };
+            htop = { enable = true; };
 
             zoxide = {
               enable = true;
@@ -492,21 +469,40 @@ in
               enableFishIntegration = true;
               keymap = {
                 input.keymap = [
-                  { exec = "close"; on = [ "<C-q>" ]; }
-                  { exec = "close --submit"; on = [ "<Enter>" ]; }
-                  { exec = "escape"; on = [ "<Esc>" ]; }
-                  { exec = "backspace"; on = [ "<Backspace>" ]; }
+                  {
+                    exec = "close";
+                    on = [ "<C-q>" ];
+                  }
+                  {
+                    exec = "close --submit";
+                    on = [ "<Enter>" ];
+                  }
+                  {
+                    exec = "escape";
+                    on = [ "<Esc>" ];
+                  }
+                  {
+                    exec = "backspace";
+                    on = [ "<Backspace>" ];
+                  }
                 ];
                 manager.keymap = [
-                  { exec = "escape"; on = [ "<Esc>" ]; }
-                  { exec = "quit"; on = [ "q" ]; }
-                  { exec = "close"; on = [ "<C-q>" ]; }
+                  {
+                    exec = "escape";
+                    on = [ "<Esc>" ];
+                  }
+                  {
+                    exec = "quit";
+                    on = [ "q" ];
+                  }
+                  {
+                    exec = "close";
+                    on = [ "<C-q>" ];
+                  }
                 ];
               };
               settings = {
-                log = {
-                  enabled = false;
-                };
+                log = { enabled = false; };
                 manager = {
                   show_hidden = false;
                   sort_by = "modified";
@@ -517,10 +513,22 @@ in
               theme = {
                 filetype = {
                   rules = [
-                    { fg = "#7AD9E5"; mime = "image/*"; }
-                    { fg = "#F3D398"; mime = "video/*"; }
-                    { fg = "#F3D398"; mime = "audio/*"; }
-                    { fg = "#CD9EFC"; mime = "application/x-bzip"; }
+                    {
+                      fg = "#7AD9E5";
+                      mime = "image/*";
+                    }
+                    {
+                      fg = "#F3D398";
+                      mime = "video/*";
+                    }
+                    {
+                      fg = "#F3D398";
+                      mime = "audio/*";
+                    }
+                    {
+                      fg = "#CD9EFC";
+                      mime = "application/x-bzip";
+                    }
                   ];
                 };
               };
