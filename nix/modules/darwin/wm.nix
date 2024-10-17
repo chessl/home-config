@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.wm;
 
-in
-{
+in {
   options = with lib; {
     my.modules.wm = {
       enable = mkEnableOption ''
@@ -18,12 +17,8 @@ in
     mkIf cfg.enable (mkMerge [
       (if (builtins.hasAttr "homebrew" options) then {
         # TODO: (automate) Requires homebrew to be installed
-        homebrew.taps = [
-          "nikitabobko/tap"
-        ];
-        homebrew.casks = [
-          "nikitabobko/tap/aerospace"
-        ];
+        homebrew.taps = [ "nikitabobko/tap" ];
+        homebrew.casks = [ "nikitabobko/tap/aerospace" ];
 
       } else {
         my.user = { };

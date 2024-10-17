@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.kitty;
 
-in
-{
+in {
   options = with lib; {
     my.modules.kitty = {
       enable = mkEnableOption ''
@@ -91,7 +90,8 @@ in
                 # --[ windows ] ------------------------------------------------------------ {{{
                 remember_window_size = true;
                 # enabled_layouts = "tall:bias=55;tall:bias=50;full_size=1;stack;fat;grid;horizontal;split;mirrored=false;";
-                enabled_layouts = "splits, fat, grid, horizontal, tall, vertical, stack";
+                enabled_layouts =
+                  "splits, fat, grid, horizontal, tall, vertical, stack";
                 window_border_width = "1.0";
                 window_margin_width = "0";
                 # NOTE: t r b l
@@ -104,11 +104,13 @@ in
 
                 # --[ tabs ] --------------------------------------------------------------- {{{
                 tab_bar_style = "custom";
-                tab_separator = "\"\"";
+                tab_separator = ''""'';
                 # REF: https://github.com/kovidgoyal/kitty/discussions/4447
                 tab_fade = "0 0 0 0";
-                tab_title_template = "{fmt.fg._415c6d}{fmt.bg.default}  {index}:{f'{title[:7]}…{title[-6:]}' if title.rindex(title[-1]) + 1 > 25 else title}{' [󰍉]' if layout_name == 'stack' else ''} ";
-                active_tab_title_template = "{fmt.fg._83b6af}{fmt.bg.default}{fmt.bold} 󰻃 {index}:{f'{title[:6]}…{title[-6:]}' if title.rindex(title[-1]) + 1 > 25 else title}{' [󰍉]' if layout_name == 'stack' else ''} ";
+                tab_title_template =
+                  "{fmt.fg._415c6d}{fmt.bg.default}  {index}:{f'{title[:7]}…{title[-6:]}' if title.rindex(title[-1]) + 1 > 25 else title}{' [󰍉]' if layout_name == 'stack' else ''} ";
+                active_tab_title_template =
+                  "{fmt.fg._83b6af}{fmt.bg.default}{fmt.bold} 󰻃 {index}:{f'{title[:6]}…{title[-6:]}' if title.rindex(title[-1]) + 1 > 25 else title}{' [󰍉]' if layout_name == 'stack' else ''} ";
                 tab_bar_edge = "top";
                 tab_bar_align = "left";
                 tab_bar_margin_width = "0.0";
@@ -301,7 +303,8 @@ in
                 allow_hyperlinks = true;
                 close_on_child_death = true;
                 allow_remote_control = true;
-                clipboard_control = "write-clipboard write-primary read-clipboard";
+                clipboard_control =
+                  "write-clipboard write-primary read-clipboard";
                 # term xterm-256color
                 term = "xterm-kitty";
                 # macos_hide_from_tasks = false;
@@ -316,7 +319,8 @@ in
                 # scrollback_pager nvim -c 'setlocal number norelativenumber nolist showtabline=0 foldcolumn=0|Man!' -c "autocmd VimEnter * normal G" -
 
                 # REF: https://github.com/kristijanhusak/neovim-config/blob/master/kitty/kitty.conf#L21
-                scrollback_pager = "nvim --noplugin -u NONE -c 'runtime plugin/man.vim|Man!' -c \"autocmd VimEnter * normal G\" -c \"nnoremap Q :qa!<CR>\" -";
+                scrollback_pager = ''
+                  nvim --noplugin -u NONE -c 'runtime plugin/man.vim|Man!' -c "autocmd VimEnter * normal G" -c "nnoremap Q :qa!<CR>" -'';
 
                 # macos_thicken_font = "1.1";
                 # tab_activity_symbol = "▲";
@@ -406,10 +410,12 @@ in
                 "super+8" = "goto_tab 8";
                 "super+9" = "goto_tab 9";
 
-                "ctrl+q>b" = "launch --allow-remote-control kitty +kitten broadcast --match-tab state:focused";
+                "ctrl+q>b" =
+                  "launch --allow-remote-control kitty +kitten broadcast --match-tab state:focused";
 
                 # scrollback
-                "ctrl+q>[" = "launch --stdin-source=@screen_scrollback --stdin-add-formatting less +G -R";
+                "ctrl+q>[" =
+                  "launch --stdin-source=@screen_scrollback --stdin-add-formatting less +G -R";
 
                 # Select and act on visible text {{{
                 # Use the hints kitten to select text and either pass it to an external program or

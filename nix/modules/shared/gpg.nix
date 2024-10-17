@@ -5,8 +5,7 @@ let
   cfg = config.my.modules.gpg;
   inherit (config.my) hm;
 
-in
-{
+in {
   options = with lib; {
     my.modules.gpg = {
       enable = mkEnableOption ''
@@ -17,7 +16,7 @@ in
 
   config = with lib;
     mkIf cfg.enable {
-    #   environment.systemPackages = with pkgs; [ gnupg ];
+      #   environment.systemPackages = with pkgs; [ gnupg ];
       programs.gnupg.agent = {
         enable = true;
         enableSSHSupport = true;
@@ -28,14 +27,13 @@ in
         GPG_TTY = "$(tty)";
       };
 
-    #   my.user = {
-    #     packages = with pkgs;
-    #       [
-    #         keybase
-    #         # keybase-gui # ???
-    #       ];
-    #   };
-
+      #   my.user = {
+      #     packages = with pkgs;
+      #       [
+      #         keybase
+      #         # keybase-gui # ???
+      #       ];
+      #   };
 
       home-manager.users."${config.my.username}" = {
 
@@ -64,7 +62,8 @@ in
             # BEGIN Some suggestions from Debian http://keyring.debian.org/creating-key.html
             personal-digest-preferences = "SHA512";
             cert-digest-algo = "SHA512";
-            default-preference-list = "SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed";
+            default-preference-list =
+              "SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed";
 
             # Some suggestions added from riseup https://we.riseup.net/riseuplabs+paow/openpgp-best-practices
             ## When creating a key, individuals may designate a specific keyserver to use to pull their keys from.

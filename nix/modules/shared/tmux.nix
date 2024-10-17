@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.tmux;
 
-in
-{
+in {
   options = with lib; {
     my.modules.tmux = {
       enable = mkEnableOption ''
@@ -18,11 +17,7 @@ in
     mkIf cfg.enable {
       my.user = { packages = with pkgs; [ reattach-to-user-namespace ]; };
 
-      programs = {
-        tmux = {
-          enable = true;
-        };
-      };
+      programs = { tmux = { enable = true; }; };
 
       home-manager.users."${config.my.username}" = {
         programs = {
@@ -38,12 +33,13 @@ in
 
             sensibleOnTop = true;
 
-            plugins = with pkgs; [
-              # tmuxPlugins.nord
-              # tmuxPlugins.urlview
-              # tmuxPlugins.battery
-              # tmuxPlugins.cpu
-            ];
+            plugins = with pkgs;
+              [
+                # tmuxPlugins.nord
+                # tmuxPlugins.urlview
+                # tmuxPlugins.battery
+                # tmuxPlugins.cpu
+              ];
 
             extraConfig = ''
               ###################################################################
@@ -164,7 +160,9 @@ in
               bind m run "cut -c3- ~/.tmux.conf | sh -s _toggle_mouse"
 
               # edit configuration
-              bind e new-window -n "~/.tmux.conf" "sh -c '\${EDITOR:-nvim} ~/.tmux.conf && tmux source ~/.tmux.conf && tmux display \"~/.tmux.conf sourced\"'"
+              bind e new-window -n "~/.tmux.conf" "sh -c '\${
+                "EDITOR:-nvim"
+              } ~/.tmux.conf && tmux source ~/.tmux.conf && tmux display \"~/.tmux.conf sourced\"'"
 
               # disappered default keys
               # https://gist.github.com/zchee/37b4795f735ed78600c9

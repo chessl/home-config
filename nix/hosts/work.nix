@@ -1,9 +1,7 @@
 { config, pkgs, lib, inputs, ... }: {
   imports = [ ../modules/darwin ];
 
-  nix = {
-    gc = { user = config.my.username; };
-  };
+  nix = { gc = { user = config.my.username; }; };
 
   services.nix-daemon.enable = true;
 
@@ -18,41 +16,27 @@
       git = {
         enable = true;
         username = "chess";
-        includes = [
-          {
-            path = "~/.gitconfig.byted";
-            condition = "gitdir:~/Developer/code.byted.org/";
-          }
-        ];
+        includes = [{
+          path = "~/.gitconfig.byted";
+          condition = "gitdir:~/Developer/code.byted.org/";
+        }];
       };
       ssh = {
         enable = true;
-        includes = [
-          "~/.ssh/config.byted"
-        ];
+        includes = [ "~/.ssh/config.byted" ];
       };
     };
 
-    user = {
-      packages = with pkgs; [
-        krb5
-      ];
-    };
+    user = { packages = with pkgs; [ krb5 ]; };
   };
 
-
-  homebrew.casks = [
-    "visual-studio-code"
-  ];
+  homebrew.casks = [ "visual-studio-code" ];
 
   networking = {
     hostName = "beta-box";
     computerName = "beta-box";
-    knownNetworkServices = [
-      "Wi-Fi"
-      "Ethernet Adaptor"
-      "Thunderbolt Ethernet"
-    ];
+    knownNetworkServices =
+      [ "Wi-Fi" "Ethernet Adaptor" "Thunderbolt Ethernet" ];
     # dns = [
     #   "223.5.5.5"
     #   "223.6.6.6"

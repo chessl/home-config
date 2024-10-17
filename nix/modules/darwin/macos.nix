@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.macos;
 
-in
-{
+in {
   options = with lib; {
     my.modules.macos = {
       enable = mkEnableOption ''
@@ -41,7 +40,8 @@ in
 
           CustomSystemPreferences = {
             "com.apple.Safari" = {
-              "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
+              "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
+                true;
             };
           };
 
@@ -116,7 +116,7 @@ in
             NSTextShowsControlCharacters = true;
 
             # Faster window resizing
-            NSWindowResizeTime = 0.001;
+            NSWindowResizeTime = 1.0e-3;
 
             # Expand print panel by default
             PMPrintingExpandedStateForPrint = true;

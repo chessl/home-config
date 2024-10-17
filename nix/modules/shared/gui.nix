@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.gui;
 
-in
-{
+in {
   options = with lib; {
     my.modules.gui = {
       enable = mkEnableOption ''
@@ -34,11 +33,7 @@ in
         ];
 
       } else {
-        my.user = {
-          packages = with pkgs; [
-            anki
-          ];
-        };
+        my.user = { packages = with pkgs; [ anki ]; };
       })
     ]);
 }

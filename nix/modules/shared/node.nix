@@ -4,8 +4,7 @@ let
 
   cfg = config.my.modules.node;
 
-in
-{
+in {
   options = with lib; {
     my.modules.node = {
       enable = mkEnableOption ''
@@ -29,12 +28,7 @@ in
           NPM_CONFIG_INIT_VERSION = "0.0.0";
         };
 
-        user = {
-          packages = with pkgs; [
-            nodejs_22
-            nodePackages.pnpm
-          ];
-        };
+        user = { packages = with pkgs; [ nodejs_22 nodePackages.pnpm ]; };
       };
     };
 }

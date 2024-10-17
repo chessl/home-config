@@ -58,8 +58,7 @@ let
       (pkgs.writeText (hm.strings.storeFileName config.contentSuffix)
         (generators.toGitINI config.contents)));
   });
-in
-{
+in {
   options = {
     my.modules.git = {
       enable = mkEnableOption ''
@@ -119,8 +118,10 @@ in
             b = "branch";
             br = "branch";
             cons = "!git ls-files -u | cut -f 2 | sort -u";
-            econs = "!git diff --name-only --diff-filter=U | uniq | xargs $EDITOR";
-            dangled = "!git fsck --no-reflog | awk '/dangling commit/ {print $3}'";
+            econs =
+              "!git diff --name-only --diff-filter=U | uniq | xargs $EDITOR";
+            dangled =
+              "!git fsck --no-reflog | awk '/dangling commit/ {print $3}'";
             cr = "!git-crypt";
             d = "diff";
             ds = "diff --staged";
@@ -139,19 +140,24 @@ in
             unamend = "reset --soft HEAD@{1}";
             abort = "reset --hard HEAD^";
             head = "!git l -1";
-            last = "!git log --max-count=1 | awk '{print $2}' | awk 'NR==1{print $1}'";
-            log = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
-            up = "!git pull --autostash --rebase && git log --color --pretty=oneline --abbrev-commit HEAD@{1}.. | sed 's/^/  /'";
+            last =
+              "!git log --max-count=1 | awk '{print $2}' | awk 'NR==1{print $1}'";
+            log =
+              "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+            up =
+              "!git pull --autostash --rebase && git log --color --pretty=oneline --abbrev-commit HEAD@{1}.. | sed 's/^/  /'";
 
             aliases = "!git config -l | grep ^alias | cut -c 7- | sort";
 
-
             # find commits that changed a file: git his <filepath>
-            his = "log --follow --color=always --date=format:'%d %b, %Y' --pretty=format:'(%Cgreen%h%Creset)[%ad] %C(blue bold)%s%Creset'";
+            his =
+              "log --follow --color=always --date=format:'%d %b, %Y' --pretty=format:'(%Cgreen%h%Creset)[%ad] %C(blue bold)%s%Creset'";
             # search code in commit history: git wot :function_name:filepath
-            wot = "log --date=format:'%d %b, %Y' --pretty='%n%C(yellow bold)📅️ %ad%Creset by (%C(green bold)%an%Creset) %C(cyan bold)%h%Creset' --graph -L";
+            wot =
+              "log --date=format:'%d %b, %Y' --pretty='%n%C(yellow bold)📅️ %ad%Creset by (%C(green bold)%an%Creset) %C(cyan bold)%h%Creset' --graph -L";
             # top 10 most edited files
-            top10 = "! git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -10";
+            top10 =
+              "! git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -10";
           };
 
           extraConfig = {
@@ -160,7 +166,7 @@ in
               prompt = true;
               nvimdiff = {
                 keepBackup = false;
-                cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\"";
+                cmd = ''nvim -d "$LOCAL" "$MERGED" "$REMOTE"'';
                 trustExitCode = true;
               };
             };
@@ -217,12 +223,8 @@ in
             init.defaultBranch = "main";
             # core.pager = "less -+FRSX -FRX";
             url = {
-              "ssh://git@github.com/" = {
-                insteadOf = "https://github.com/";
-              };
-              "ssh://git@gitlab.com/" = {
-                insteadOf = "https://gitlab.com/";
-              };
+              "ssh://git@github.com/" = { insteadOf = "https://github.com/"; };
+              "ssh://git@gitlab.com/" = { insteadOf = "https://gitlab.com/"; };
               "ssh://git@bitbucket.org/" = {
                 insteadOf = "https://bitbucket.org/";
               };
@@ -267,9 +269,7 @@ in
           ];
         };
 
-        lazygit = {
-          enable = true;
-        };
+        lazygit = { enable = true; };
       };
     };
   };

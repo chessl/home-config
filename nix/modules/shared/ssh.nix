@@ -5,8 +5,7 @@ with lib;
 let
   cfg = config.my.modules.ssh;
   inherit (config.my.user) home;
-in
-{
+in {
   options = {
     my.modules.ssh = {
       enable = mkEnableOption ''
@@ -14,7 +13,7 @@ in
       '';
       includes = mkOption {
         type = with types; listOf str;
-        default = [];
+        default = [ ];
         description = ''
           File globs of ssh config files that should be included via the
           `Include` directive.

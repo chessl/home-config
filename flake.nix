@@ -46,6 +46,11 @@
           extraOptions = "experimental-features = nix-command flakes";
           gc = {
             automatic = true;
+            interval = {
+              Weekday = 0;
+              Hour = 0;
+              Minute = 0;
+            };
             options = "--delete-older-than 3d";
           };
 
@@ -86,12 +91,8 @@
         };
 
         nixpkgs = {
-          config = {
-            allowUnfree = true;
-          };
-          overlays = [
-            self.overlay
-          ];
+          config = { allowUnfree = true; };
+          overlays = [ self.overlay ];
         };
 
         # time.timeZone = config.my.timezone;
@@ -110,12 +111,14 @@
         # Before changing this value read the documentation for this option
         # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
         # https://nixos.org/manual/nixos/stable/index.html#sec-upgrading
-        system.stateVersion = if pkgs.stdenv.isDarwin then 4 else "20.09"; # Did you read the comment?
+        system.stateVersion = if pkgs.stdenv.isDarwin then
+          4
+        else
+          "20.09"; # Did you read the comment?
 
       };
 
-    in
-    {
+    in {
       overlay = _: prev: {
         monolisa = prev.callPackage ./nix/pkgs/monolisa.nix { };
         monolisa-nerd = prev.callPackage ./nix/pkgs/monolisa-nerd.nix { };

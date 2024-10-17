@@ -5,8 +5,7 @@ with config.my;
 let
   cfg = config.my.modules.vim;
   inherit (config.my.user) home;
-in
-{
+in {
   options = with lib; {
     my.modules.vim = {
       enable = mkEnableOption ''

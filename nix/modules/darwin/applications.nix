@@ -1,16 +1,10 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 
 with lib;
 
-let
-  cfg = config.macOS.apps.aliases;
+let cfg = config.macOS.apps.aliases;
 
-in
-{
+in {
   options = {
     macOS.apps.aliases = {
       enable = mkOption {
@@ -54,3 +48,4 @@ in
     };
   };
 }
+

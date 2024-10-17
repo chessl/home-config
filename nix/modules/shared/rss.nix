@@ -5,8 +5,7 @@ with lib;
 let
   cfg = config.my.modules.rss;
   inherit (config.my.user) home;
-in
-{
+in {
   options = {
     my.modules.rss = {
       enable = mkEnableOption ''
@@ -21,13 +20,11 @@ in
         newsboat = {
           enable = true;
           autoReload = true;
-          urls = [
-            {
-              tags = [ "system programming" "learning" "nix" "engineering" ];
-              url = "https://jvns.ca/atom.xml";
+          urls = [{
+            tags = [ "system programming" "learning" "nix" "engineering" ];
+            url = "https://jvns.ca/atom.xml";
 
-            }
-          ];
+          }];
         };
       };
     };
